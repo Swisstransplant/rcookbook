@@ -1,0 +1,142 @@
+---
+title: "Swisstransplant cookbook for R"
+author:
+- name: Simon Schwab
+  email: simon.schwab@swisstransplant.org
+date: "Last updated: `r format(Sys.Date())`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Swisstransplant style graphics
+
+The Swisstransplant Research Team developed an R package and an R cookbook to make the process of creating high-quality publication-ready graphics in our in-house style using R's ggplot2 library a more efficient and reproducible process.
+
+The cookbook below should hopefully help anyone who wants to make graphics like these: 
+
+![](swt_example_plots.png)
+
+### Load libraries and define colors
+```{r}
+library(reshape2)
+library(ggplot2)
+
+COLORS9 = c("#69d3c3", "#fbe446", "#e5005c", "#d1ccbd",
+            "#9BBDC5", "#8bad8f", "#f2af5c", "#d98f8f", "#2A548A")
+```
+
+## Make a line Plot
+
+### Data
+```{r}
+# Data taken from Annual Report 2020 (p. 32)
+table3.2 = t(array(c(
+  13.3,17.2,18.6,18.4,17.0,
+  11.5,12.6,14.9,11.7,11.2,
+  1.8,4.6,3.8,6.7,5.8), dim = c(5,3)))
+
+colnames(table3.2) = 2016:2020
+rownames(table3.2) = c("Total", "DBD", "DCD")
+table3.2
+```
+
+Create data.frame for the plot.
+```{r}
+data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
+```
+
+### Plot
+```{r fig.height=4.5, fig.width=6}
+number_height = -0.8
+
+p.line = ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
+
+  # plot line with numbers
+  geom_line(data = data3.2, size=1) +
+  geom_text(data = data3.2, aes(label=Anzahl), vjust=number_height,
+            col="black") +
+  
+  # some adjustments (colors, axes, etc)
+  scale_color_manual(values=COLORS9[c(3,2,9)]) +
+  scale_y_continuous(breaks = seq(0,22,4), limits = c(0,22)) +
+  ylab("Anzahl spendende verstorbene\n Personen (pmp)") +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.background = element_rect(fill = "grey93"),
+        legend.title = element_blank(),
+        legend.key.height = unit(c(0.5, 0.5, 0.1), 'cm'),
+        legend.background = element_rect(fill="grey93"))
+# ggsave(file="figure32.png", type="cairo-png")
+p.line
+``` 
+
+
+## Make a barplot with lines
+
+### Data
+```{r}
+# Data taken from Annual Report 2020 (p. 31)
+table3.1 = t(array(c(
+  96,106,126,100,96,
+  15,39,32,57,50), dim = c(5,2)))
+
+table3.1.totals = array(colSums(table3.1), dim = c(1,5))
+colnames(table3.1) = 2016:2020
+colnames(table3.1.totals) = 2016:2020
+rownames(table3.1) = c("DBD", "DCD")
+rownames(table3.1.totals) = c("Total")
+table3.1
+```
+
+Create data.frame for the plot. Because the totlas are in a separate line plot, we
+create a separate $data.frame$ accordingly.
+```{r}
+data3.1 = melt(table3.1, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
+data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
+```
+
+### Plot
+```{r fig.height=4.5, fig.width=6}
+number_height = -0.8
+bar_with = 0.5
+
+p.barline = ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
+  
+  # plot bars with numbers
+  geom_bar(data = data3.1, stat="identity", position="dodge", width=bar_with) +
+  geom_text(data = data3.1, aes(label=Anzahl), vjust=number_height,
+            position = position_dodge(width=bar_with)) +
+
+  # plot line with numbers
+  geom_line(data = data3.1.totals, col = COLORS9[3], size=1) +
+  geom_text(data = data3.1.totals, aes(label=Anzahl), vjust=number_height,
+            position = position_dodge(width=bar_with), col=COLORS9[3]) +
+  
+  # some adjustments (colors, axes, etc)
+  scale_fill_manual(values=COLORS9[c(2,9,3)]) +
+  scale_y_continuous(breaks = seq(0,180,20), limits = c(0,180)) +
+  ylab("Anzahl spendende verstorbene\n Personen") +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.background = element_rect(fill = "grey93"),
+        legend.title = element_blank(),
+        legend.key.height = unit(c(0.5, 0.5, 0.1), 'cm'),
+        legend.background = element_rect(fill="grey93"))
+# ggsave(file="figure31.png", type="cairo-png")
+p.barline
+``` 
+
+## Combining plot and subplots
+```{r fig.height=3.5, fig.width=9}
+cowplot::plot_grid(p.line, p.barline, nrow = 1, ncol = 2, labels = c("A", "B"))
+ggsave(file="swt_example_plots.png", type="cairo-png")
+```
+
