@@ -81,7 +81,9 @@ p.line = ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
        # subtitle = "Subtitle"
        ) +
   swt_style() + theme(legend.position = "top")
-p.line
+
+p3.2 = finalise_plot(p.line, source = "", save_filepath = "fig3_2.png",
+              width_pixels = 640, height_pixels = 450)
 ``` 
 
 ## Make a barplot with lines
@@ -105,7 +107,8 @@ Create data.frame for the plot. Because the totlas are in a separate line plot, 
 create a separate $data.frame$ accordingly.
 ```{r}
 data3.1 = melt(table3.1, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
-data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
+data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"),
+                      value.name = "Anzahl")
 ```
 
 ### Plot
@@ -134,12 +137,13 @@ p.barline = ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   swt_style() 
 
 # ggsave(file="figure31.png", type="cairo-png")
-p.barline
+p3.1 = finalise_plot(p.barline, source = "", save_filepath = "fig3_1.png",
+              width_pixels = 640, height_pixels = 450)
 ``` 
 
 ## Combining plots and subplots
 ```{r fig.height=5, fig.width=12}
-cowplot::plot_grid(p.line, p.barline, nrow = 1, ncol = 2, labels = c("A", "B"),
+cowplot::plot_grid(p3.2, p3.1, nrow = 1, ncol = 2, labels = c("A", "B"),
                    label_size=18)
 ggsave(file="swt_example_plots.png", type="cairo-png")
 ```
