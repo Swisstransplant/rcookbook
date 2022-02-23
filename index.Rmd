@@ -9,7 +9,6 @@ output:
     toc: true
     toc_depth: 4
     toc_float: true
-    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}
@@ -22,7 +21,7 @@ This cookbook demonstrates the usage of the Swisstransplant (SWT) R package `swt
 to make high-quality publication-ready graphics in our in-house style.
 
 ### Load libraries
-```{r}
+```{r, message=FALSE}
 library(ggplot2)
 library(reshape2)
 library(swt)
