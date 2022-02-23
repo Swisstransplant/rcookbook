@@ -21,10 +21,6 @@ knitr::opts_chunk$set(echo = TRUE)
 This cookbook demonstrates the usage of the Swisstransplant (SWT) R package `swt`
 to make high-quality publication-ready graphics in our in-house style.
 
-The cookbook below shows how to make graphics like these: 
-
-![](swt_example_plots.png)
-
 ### Load libraries
 ```{r}
 library(ggplot2)
@@ -120,7 +116,7 @@ data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```{r fig.height=4, fig.width=5}
 number_height = -0.8
 
-p.line = ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
+p3.2 = ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   
   # plot line with numbers
   geom_line(data = data3.2, size=1) +
@@ -139,9 +135,6 @@ p.line = ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
        ) +
   swt_style(grey_theme = TRUE) +
   theme(legend.position = "top")
-
-p3.2 = finalise_plot(p.line, source = "", save_filepath = "fig3_2.png",
-              width_pixels = 640, height_pixels = 450)
 ``` 
 
 ## Make a barplot with lines
@@ -174,7 +167,7 @@ data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"),
 number_height = -0.8
 bar_with = 0.5
 
-p.barline = ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
+p3.1 = ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   
   # plot bars with numbers
   geom_bar(data = data3.1, stat="identity", position="dodge", width=bar_with) +
@@ -194,9 +187,6 @@ p.barline = ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   ylab("Personen") +
   swt_style(grey_theme = TRUE) 
 
-# ggsave(file="figure31.png", type="cairo-png")
-p3.1 = finalise_plot(p.barline, source = "", save_filepath = "fig3_1.png",
-              width_pixels = 640, height_pixels = 450)
 ``` 
 
 ## Combining plots and subplots
