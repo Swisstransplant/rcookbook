@@ -68,10 +68,10 @@ names.arg = c("blue\nSWT", "turkis\nTpx", "yellow\ndonat", "strongr\nakzent",
 ```
 
 The `swt_color` object provides an user-friendly access to the SWT
-color scheme,  e.g. `swtcol$blue.swt` or `swtcol$sky.lungs`.
+color scheme,  e.g. `swtcol$blue.swt` or `swtcol$lightblue.lungs`.
 
 
-## Basic plots
+# Basic plots
 
 ```{r fig.height=5, fig.width=5}
 set.seed(1980)
@@ -114,9 +114,9 @@ grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 ```
 
 
-## Make a line Plot
+# Make a line Plot
 
-### Example data from annual report
+## Example data from annual report
 ```{r}
 # Data taken from Annual Report 2020 (p. 32)
 table3.2 = t(array(c(
@@ -134,7 +134,7 @@ Create a `data.frame` for the plot.
 data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```
 
-### Plot using SWT style
+## Plot using SWT style
 ```{r fig.height=4, fig.width=5}
 number_height = -0.8
 
@@ -159,9 +159,9 @@ ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   theme(legend.position = "top")
 ``` 
 
-## Make a barplot with lines
+# Make a barplot with lines
 
-### Example data from annual report
+## Example data from annual report
 ```{r}
 # Data taken from Annual Report 2020 (p. 31)
 table3.1 = t(array(c(
