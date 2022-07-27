@@ -1,0 +1,12 @@
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    background-color: #e5005c;
+}
+
+a {
+    color: #e5005c;
+}
+
+h1.title, h1, h2 {
+    color: #003764;
+    font-weight: bold;
+}

@@ -3,7 +3,7 @@ title: "Swisstransplant cookbook for R"
 author:
 - name: Simon Schwab
   email: simon.schwab@swisstransplant.org
-date: "Last updated: `r format(Sys.Date())`"
+date: "Last updated: `r format(Sys.Date(), '%d. %B %Y')`"
 output: 
   html_document:
     code_folding: hide
@@ -11,33 +11,18 @@ output:
     toc: true
     toc_depth: 2
     toc_float: true
-subtitle: Research reporting
+    css: "swt.css"
+subtitle: Create wonderful scientific figues in our in-house style
 ---
-
-<style>
-.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-background-color: #e5005c;
-}
-
-a {
-color: #e5005c;
-}
-
-h1.title, h1, h2 {
-color: #2a548a;
-}
-</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Swisstransplant style graphics
-
 This cookbook demonstrates the usage of the Swisstransplant (SWT) R package `swt`
 to make high-quality publication-ready graphics in our in-house style.
 
-## Load libraries
+# Load libraries
 ```{r, message=FALSE}
 library(ggplot2)
 library(gridExtra)
@@ -46,10 +31,14 @@ library(swt)
 library(knitr)
 ```
 
-## SWT colors
-```{r fig.height=2, fig.width=8}
-swtcol = swt_colors()
+# SWT colors
 
+The `swt_color` object provides an user-friendly access to the SWT
+color scheme.
+
+```{r fig.height=1.2, fig.width=8}
+swtcol = swt_colors()
+par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
 barplot(rep(1,10), axes=FALSE, col=c(swtcol$blue.swt,
                                      swtcol$turkis.tpx,
                                      swtcol$yellow.donation, 
@@ -67,8 +56,68 @@ names.arg = c("blue\nSWT", "turkis\nTpx", "yellow\ndonat", "strongr\nakzent",
 )
 ```
 
-The `swt_color` object provides an user-friendly access to the SWT
-color scheme,  e.g. `swtcol$blue.swt` or `swtcol$lightblue.lungs`.
+# Single hue palettes
+
+The `swt_color` object also includes single hue palettes with three color strengths, 75%, 50%, and 25%.
+
+```{r fig.height=7, fig.width=5}
+par(mfrow=c(10,1), mai=c(0.1,0.1,0.2,0.1))
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.blue.swt[1],
+                                    swtcol$pal.blue.swt[2],
+                                    swtcol$pal.blue.swt[3],
+                                    swtcol$pal.blue.swt[4]),
+        names = c("100%", "75%", "50%", "25%")
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.turkis.tpx[1],
+                                    swtcol$pal.turkis.tpx[2],
+                                    swtcol$pal.turkis.tpx[3],
+                                    swtcol$pal.turkis.tpx[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.yellow.donation[1],
+                                    swtcol$pal.yellow.donation[2],
+                                    swtcol$pal.yellow.donation[3],
+                                    swtcol$pal.yellow.donation[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.strongred.akzent[1],
+                                    swtcol$pal.strongred.akzent[2],
+                                    swtcol$pal.strongred.akzent[3],
+                                    swtcol$pal.strongred.akzent[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.red.liver[1],
+                                    swtcol$pal.red.liver[2],
+                                    swtcol$pal.red.liver[3],
+                                    swtcol$pal.red.liver[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.darkyellow.kidney[1],
+                                    swtcol$pal.darkyellow.kidney[2],
+                                    swtcol$pal.darkyellow.kidney[3],
+                                    swtcol$pal.darkyellow.kidney[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.green.pancreas[1],
+                                    swtcol$pal.green.pancreas[2],
+                                    swtcol$pal.green.pancreas[3],
+                                    swtcol$pal.green.pancreas[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.lightblue.lungs[1],
+                                    swtcol$pal.lightblue.lungs[2],
+                                    swtcol$pal.lightblue.lungs[3],
+                                    swtcol$pal.lightblue.lungs[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.beige.intestine[1],
+                                    swtcol$pal.beige.intestine[2],
+                                    swtcol$pal.beige.intestine[3],
+                                    swtcol$pal.beige.intestine[4])
+)
+```
 
 
 # Basic plots
@@ -116,7 +165,6 @@ grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 
 # Make a line Plot
 
-## Example data from annual report
 ```{r}
 # Data taken from Annual Report 2020 (p. 32)
 table3.2 = t(array(c(
@@ -126,7 +174,6 @@ table3.2 = t(array(c(
 
 colnames(table3.2) = 2016:2020
 rownames(table3.2) = c("Total", "DBD", "DCD")
-kable(table3.2)
 ```
 
 Create a `data.frame` for the plot.
@@ -134,7 +181,6 @@ Create a `data.frame` for the plot.
 data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```
 
-## Plot using SWT style
 ```{r fig.height=4, fig.width=5}
 number_height = -0.8
 
@@ -143,7 +189,7 @@ ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   # plot line with numbers
   geom_line(data = data3.2, size=1) +
   geom_text(data = data3.2, aes(label=Anzahl), vjust=number_height,
-            col="black", size=5) +
+            col="black", size=4) +
   
   # some adjustments (colors, axes, etc)
   scale_color_manual(values=c(swtcol$strongred.akzent,
@@ -161,7 +207,6 @@ ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
 
 # Make a barplot with lines
 
-## Example data from annual report
 ```{r}
 # Data taken from Annual Report 2020 (p. 31)
 table3.1 = t(array(c(
@@ -173,7 +218,6 @@ colnames(table3.1) = 2016:2020
 colnames(table3.1.totals) = 2016:2020
 rownames(table3.1) = c("DBD", "DCD")
 rownames(table3.1.totals) = c("Total")
-kable(table3.1)
 ```
 
 Create data.frame for the plot. Because the totals are in a separate line plot, we
