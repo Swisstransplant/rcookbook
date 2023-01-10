@@ -3,167 +3,178 @@ title: "Swisstransplant cookbook for R"
 author:
 - name: Simon Schwab
   email: simon.schwab@swisstransplant.org
-date: "Last updated: `r format(Sys.Date(), '%d. %B %Y')`"
 output: 
   html_document:
     code_folding: hide
     df_print: paged
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     toc_float: true
     css: "swt.css"
-subtitle: Create wonderful scientific figues in our in-house style
+subtitle: Statistical reporting in our in-house style
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This cookbook demonstrates the usage of the Swisstransplant (SWT) R package `swt`
-to make high-quality publication-ready graphics in our in-house style.
+# Introduction
+This cookbook demonstrates the usage of the Swisstransplant R package `swt`
+to make high-quality reports and publication-ready graphics in our in-house style.
 
-# Load libraries
 ```{r, message=FALSE}
 library(ggplot2)
-library(gridExtra)
+library(cowplot)
 library(reshape2)
-library(swt)
 library(knitr)
+library(swt)
 ```
 
-# SWT colors
+# Header 1
+This is a level-1 header.
+
+## Header 2
+This is a level-2 header.
+
+### Header 3
+This is a level-3 header.
+
+# Colors
 
 The `swt_color` object provides an user-friendly access to the SWT
 color scheme.
 
 ```{r fig.height=1.2, fig.width=8}
-swtcol = swt_colors()
+col = swt_colors()
 par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
-barplot(rep(1,10), axes=FALSE, col=c(swtcol$blue.swt,
-                                     swtcol$turkis.tpx,
-                                     swtcol$yellow.donation, 
-                                     swtcol$strongred.akzent,
-                                     swtcol$red.liver,
-                                     swtcol$darkyellow.kidney,
-                                     swtcol$green.pancreas,
-                                     swtcol$lightblue.lungs,
-                                     swtcol$beige.intestine,
-                                     swtcol$pink.heart
+barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
+                                     col$blue.swt,
+                                     col$turkis.tpx,
+                                     col$yellow.donation, 
+                                     col$strongred.akzent,
+                                     col$red.liver,
+                                     col$darkyellow.kidney,
+                                     col$green.pancreas,
+                                     col$lightblue.lungs,
+                                     col$beige.intestine,
+                                     col$pink.heart
 ),
-names.arg = c("blue\nSWT", "turkis\nTpx", "yellow\ndonat", "strongr\nakzent", 
+names.arg = c("blue\ndark", "blue\nSWT", "turkis\nTpx", "yellow\ndonat", "strongr\nakzent", 
               "red\nliver", "darkylw\nkidney", "green\npancr", "lightb\nlungs",
               "beige\nintest", "pink\nheart")
 )
 ```
 
-# Single hue palettes
+## Single hue palettes
 
-The `swt_color` object also includes single hue palettes with three color strengths, 75%, 50%, and 25%.
+The `swt_color` object also includes single hue palettes with three additonal color strengths, 75%, 50%, and 25%.
 
 ```{r fig.height=7, fig.width=5}
 par(mfrow=c(10,1), mai=c(0.1,0.1,0.2,0.1))
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.blue.swt[1],
-                                    swtcol$pal.blue.swt[2],
-                                    swtcol$pal.blue.swt[3],
-                                    swtcol$pal.blue.swt[4]),
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
+                                    col$pal.blue.swt[2],
+                                    col$pal.blue.swt[3],
+                                    col$pal.blue.swt[4]),
         names = c("100%", "75%", "50%", "25%")
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.turkis.tpx[1],
-                                    swtcol$pal.turkis.tpx[2],
-                                    swtcol$pal.turkis.tpx[3],
-                                    swtcol$pal.turkis.tpx[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.turkis.tpx[1],
+                                    col$pal.turkis.tpx[2],
+                                    col$pal.turkis.tpx[3],
+                                    col$pal.turkis.tpx[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.yellow.donation[1],
-                                    swtcol$pal.yellow.donation[2],
-                                    swtcol$pal.yellow.donation[3],
-                                    swtcol$pal.yellow.donation[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.yellow.donation[1],
+                                    col$pal.yellow.donation[2],
+                                    col$pal.yellow.donation[3],
+                                    col$pal.yellow.donation[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.strongred.akzent[1],
-                                    swtcol$pal.strongred.akzent[2],
-                                    swtcol$pal.strongred.akzent[3],
-                                    swtcol$pal.strongred.akzent[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.strongred.akzent[1],
+                                    col$pal.strongred.akzent[2],
+                                    col$pal.strongred.akzent[3],
+                                    col$pal.strongred.akzent[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.red.liver[1],
-                                    swtcol$pal.red.liver[2],
-                                    swtcol$pal.red.liver[3],
-                                    swtcol$pal.red.liver[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.red.liver[1],
+                                    col$pal.red.liver[2],
+                                    col$pal.red.liver[3],
+                                    col$pal.red.liver[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.darkyellow.kidney[1],
-                                    swtcol$pal.darkyellow.kidney[2],
-                                    swtcol$pal.darkyellow.kidney[3],
-                                    swtcol$pal.darkyellow.kidney[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.darkyellow.kidney[1],
+                                    col$pal.darkyellow.kidney[2],
+                                    col$pal.darkyellow.kidney[3],
+                                    col$pal.darkyellow.kidney[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.green.pancreas[1],
-                                    swtcol$pal.green.pancreas[2],
-                                    swtcol$pal.green.pancreas[3],
-                                    swtcol$pal.green.pancreas[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.green.pancreas[1],
+                                    col$pal.green.pancreas[2],
+                                    col$pal.green.pancreas[3],
+                                    col$pal.green.pancreas[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.lightblue.lungs[1],
-                                    swtcol$pal.lightblue.lungs[2],
-                                    swtcol$pal.lightblue.lungs[3],
-                                    swtcol$pal.lightblue.lungs[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.lightblue.lungs[1],
+                                    col$pal.lightblue.lungs[2],
+                                    col$pal.lightblue.lungs[3],
+                                    col$pal.lightblue.lungs[4])
 )
 
-barplot(rep(1,4), axes=FALSE, col=c(swtcol$pal.beige.intestine[1],
-                                    swtcol$pal.beige.intestine[2],
-                                    swtcol$pal.beige.intestine[3],
-                                    swtcol$pal.beige.intestine[4])
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.beige.intestine[1],
+                                    col$pal.beige.intestine[2],
+                                    col$pal.beige.intestine[3],
+                                    col$pal.beige.intestine[4])
 )
 ```
 
 
-# Basic plots
+# Plots
+## Scientific plots
 
 ```{r fig.height=5, fig.width=5}
 set.seed(1980)
-n = 100
-var1 = c(rnorm(n/2, mean=0), rnorm(n/2, mean=1) )
+n = 200
+var1 = c(rnorm(n/2, mean=0), rnorm(n/2, mean=3) )
 d = data.frame(var1 = var1,
                var2 = var1 + rnorm(n, sd = 0.4),
                group = as.factor(rep(c("abc", "mno" ), each=n/2))
 )
 
 p1 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
-  geom_boxplot(fill=swtcol$grey.bg) + 
-  geom_point(size=2, position = position_jitter(height = 0, width = 0.15),
-             col=swtcol$beige.intestine) +
-  scale_color_manual(values = c(swtcol$blue.swt,
-                                swtcol$pink.heart)) +
+  geom_boxplot(fill=col$grey.bg) + 
+  geom_point(size=2, position = position_jitter(height = 0, width = 0.25),
+             col=c(rep(col$pal.blue.swt[3], n/2), rep(col$pal.red.liver[3], n/2))) +
+  scale_color_manual(values = c(col$blue.swt,
+                                col$red.liver)) +
   swt_style(legend_position = "none", grey_theme = TRUE)
 
 p2 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
   geom_boxplot() + 
-  geom_point(size=2, shape=1, position = position_jitter(height = 0, width = 0.15),
-             col=swtcol$beige.intestine) +
-  scale_color_manual(values = c(swtcol$turkis.tpx,
-                                swtcol$darkyellow.kidney)) +
+  geom_point(size=2, position = position_jitter(height = 0, width = 0.25),
+             col=c(rep(col$pal.turkis.tpx[3], n/2), rep(col$pal.darkyellow.kidney[3], n/2))) +
+  scale_color_manual(values = c(col$turkis.tpx,
+                                col$darkyellow.kidney)) +
   swt_style(legend_position = "none")
 
 p3 = ggplot(d, aes(x=var2, fill=group)) + 
-  geom_histogram(bins=10) +
-  scale_fill_manual(values = c(swtcol$lightblue.lungs,
-                               swtcol$beige.intestine)) +
+  geom_histogram(position = "identity", bins=20, alpha=0.5) +
+  scale_fill_manual(values = c(col$lightblue.lungs,
+                               col$beige.intestine)) +
   swt_style(grey_theme = FALSE)
 
 p4 = ggplot(d, aes(x=var2, y=var1, group=group, col=group)) + 
-  geom_point(size=2) +
-  scale_color_manual(values = c(swtcol$blue.swt,
-                                swtcol$yellow.donation)) +
+  geom_point(size=2, alpha=0.5) +
+  scale_color_manual(values = c(col$blue.swt,
+                                col$yellow.donation)) +
+  labs(title = "Title") +
   swt_style(legend_position = "top", grey_theme = TRUE)
 
-grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
+plot_grid(p1, p2, p3, p4, nrow = 2, ncol = 2, labels = c("A", "B", "C", "D"))
 ```
 
 
-# Make a line Plot
+## Line plot
 
 ```{r}
 # Data taken from Annual Report 2020 (p. 32)
@@ -176,7 +187,8 @@ colnames(table3.2) = 2016:2020
 rownames(table3.2) = c("Total", "DBD", "DCD")
 ```
 
-Create a `data.frame` for the plot.
+First, we have to create a `data.frame` for the plot.
+
 ```{r}
 data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```
@@ -187,14 +199,14 @@ number_height = -0.8
 ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   
   # plot line with numbers
-  geom_line(data = data3.2, size=1) +
+  geom_line(data = data3.2, linewidth=1) +
   geom_text(data = data3.2, aes(label=Anzahl), vjust=number_height,
             col="black", size=4) +
   
   # some adjustments (colors, axes, etc)
-  scale_color_manual(values=c(swtcol$strongred.akzent,
-                              swtcol$yellow.donation,
-                              swtcol$blue.swt)) +
+  scale_color_manual(values=c(col$strongred.akzent,
+                              col$yellow.donation,
+                              col$blue.swt)) +
   scale_y_continuous(breaks = seq(0,22,4), limits = c(0,22)) +
   
   ylab("pmp") +
@@ -205,7 +217,7 @@ ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   theme(legend.position = "top")
 ``` 
 
-# Make a barplot with lines
+## Barplot with lines
 
 ```{r}
 # Data taken from Annual Report 2020 (p. 31)
@@ -220,8 +232,9 @@ rownames(table3.1) = c("DBD", "DCD")
 rownames(table3.1.totals) = c("Total")
 ```
 
-Create data.frame for the plot. Because the totals are in a separate line plot, we
+We first create a data.frame for the plot. Because the totals are in a separate line plot, we
 create a separate `data frame` accordingly.
+
 ```{r}
 data3.1 = melt(table3.1, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"),
@@ -240,16 +253,26 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
             position = position_dodge(width=bar_with)) +
   
   # plot line with numbers
-  geom_line(data = data3.1.totals, col = swtcol$strongred.akzent, size=1) +
+  geom_line(data = data3.1.totals, col = col$strongred.akzent, linewidth=1) +
   geom_text(data = data3.1.totals, aes(label=Anzahl), vjust=number_height,
-            position = position_dodge(width=bar_with), col=swtcol$strongred.akzent) +
+            position = position_dodge(width=bar_with), col=col$strongred.akzent) +
   
   # some adjustments (colors, axes, etc)
-  scale_fill_manual(values=c(swtcol$yellow.donation, 
-                             swtcol$blue.swt,
-                             swtcol$strongred.akzent)) +
+  scale_fill_manual(values=c(col$yellow.donation, 
+                             col$blue.swt,
+                             col$strongred.akzent)) +
   scale_y_continuous(breaks = seq(0,180,20), limits = c(0,180)) +
   ylab("Personen") +
   swt_style(grey_theme = TRUE) 
+```
 
-``` 
+<div class="footer"> 
+  <hr> 
+  <p>Last updated: `r format(Sys.Date(), '%d. %B %Y')`</p>
+</div>
+
+```{r}
+sessionInfo()
+```
+
+
