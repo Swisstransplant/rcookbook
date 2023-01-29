@@ -1,18 +1,16 @@
-.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-    background-color: #003764;
-}
-
+/* Link color
 a {
-    color: #e5005c;
+    color: #003764;
 }
+*/
 
-h1.title, h1, h2, h3, h3.subtitle {
+/* Headings color */
+h1.title, h1, h2, h3 {
     color: #003764;
     font-weight: bold;
 }
 
-
-/*----------SWT logo above TOC---------*/
+/* SWT logo above TOC */
 #TOC::before {
   content: "";
   display: block;

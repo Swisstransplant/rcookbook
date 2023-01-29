@@ -1,22 +1,22 @@
 ---
-title: "Swisstransplant cookbook for R"
-author:
-- name: Simon Schwab
-  email: simon.schwab@swisstransplant.org
-output: 
-  html_document:
-    code_folding: hide
-    df_print: paged
+title: 'Swisstransplant cookbook for R'
+subtitle: 'Statistical reporting in our in-house style'
+author: Simon Schwab
+date: last-modified
+abstract: 'Short description of the project'
+lang: en
+format:
+  html:
     toc: true
-    toc_depth: 3
-    toc_float: true
-    css: "swt.css"
-subtitle: Statistical reporting in our in-house style
+    css: swt.css
+    mainfont: sans-serif
+    linkcolor: '#E5005C'
+    df-print: kable
+    embed-resources: true
+    code-fold: true
+    code-block-bg: '#E6EEF0'
+    code-block-border-left: '#E5005C'
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Introduction
 This cookbook demonstrates the usage of the Swisstransplant R package `swt`
@@ -26,7 +26,6 @@ to make high-quality reports and publication-ready graphics in our in-house styl
 library(ggplot2)
 library(cowplot)
 library(reshape2)
-library(knitr)
 library(swt)
 ```
 
@@ -52,16 +51,17 @@ barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
                                      col$turkis.tpx,
                                      col$yellow.donation, 
                                      col$strongred.akzent,
+                                     col$pink.heart,
                                      col$red.liver,
                                      col$darkyellow.kidney,
                                      col$green.pancreas,
                                      col$lightblue.lungs,
-                                     col$beige.intestine,
-                                     col$pink.heart
+                                     col$beige.intestine
+                                     
 ),
-names.arg = c("blue\ndark", "blue\nSWT", "turkis\nTpx", "yellow\ndonat", "strongr\nakzent", 
-              "red\nliver", "darkylw\nkidney", "green\npancr", "lightb\nlungs",
-              "beige\nintest", "pink\nheart")
+names.arg = c("blue\ndark", "blue\nSWT", "turkis\nTpx", "yellow\ndonat", 
+              "strongr\nakzent", "pink\nheart", "red\nliver", "darkylw\nkidney", 
+              "green\npancr", "lightb\nlungs", "beige\nintest")
 )
 ```
 
@@ -128,7 +128,6 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.beige.intestine[1],
 )
 ```
 
-
 # Plots
 ## Scientific plots
 
@@ -144,7 +143,8 @@ d = data.frame(var1 = var1,
 p1 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
   geom_boxplot(fill=col$grey.bg) + 
   geom_point(size=2, position = position_jitter(height = 0, width = 0.25),
-             col=c(rep(col$pal.blue.swt[3], n/2), rep(col$pal.red.liver[3], n/2))) +
+             col=c(rep(col$pal.blue.swt[3], n/2),
+                   rep(col$pal.red.liver[3], n/2))) +
   scale_color_manual(values = c(col$blue.swt,
                                 col$red.liver)) +
   swt_style(legend_position = "none", grey_theme = TRUE)
@@ -152,7 +152,8 @@ p1 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) +
 p2 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
   geom_boxplot() + 
   geom_point(size=2, position = position_jitter(height = 0, width = 0.25),
-             col=c(rep(col$pal.turkis.tpx[3], n/2), rep(col$pal.darkyellow.kidney[3], n/2))) +
+             col=c(rep(col$pal.turkis.tpx[3], n/2), 
+                   rep(col$pal.darkyellow.kidney[3], n/2))) +
   scale_color_manual(values = c(col$turkis.tpx,
                                 col$darkyellow.kidney)) +
   swt_style(legend_position = "none")
@@ -266,10 +267,7 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   swt_style(grey_theme = TRUE) 
 ```
 
-<div class="footer"> 
-  <hr> 
-  <p>Last updated: `r format(Sys.Date(), '%d. %B %Y')`</p>
-</div>
+# Computing environment
 
 ```{r}
 sessionInfo()
