@@ -1,15 +1,14 @@
 ---
 title: 'Swisstransplant cookbook for R'
-subtitle: 'Statistical reporting in our in-house style'
+subtitle: 'Statistical report'
 author: Simon Schwab
 date: last-modified
-abstract: 'Short description of the project'
+abstract: 'The aim of this document is to demonstrate statistical reporting in our in-house style..'
 lang: en
 format:
   html:
     toc: true
     css: swt.css
-    mainfont: sans-serif
     linkcolor: '#E5005C'
     df-print: kable
     embed-resources: true
@@ -19,35 +18,80 @@ format:
 ---
 
 # Introduction
-This cookbook demonstrates the usage of the Swisstransplant R package `swt`
-to make high-quality reports and publication-ready graphics in our in-house style.
+This cookbook demonstrates the usage of the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style. It also provides links to important resources and documentation.
 
 ```{r, message=FALSE}
 library(ggplot2)
-library(cowplot)
+library(gridExtra)
 library(reshape2)
 library(swt)
 ```
 
-# Header 1
-This is a level-1 header.
+# Statistical reporting
 
-## Header 2
-This is a level-2 header.
+The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, and results, tables and figures into a single reproducible document. All the steps how the results were obtained from the data are exactly specified. This enables transparency, reproducibility and trust in statistical analyses.
 
-### Header 3
-This is a level-3 header.
+A new project in RStudio can be created using the Swisstransplant project template:
+Click **New Project...** then choose **New Directory** and select the **Swisstransplant Project Template** at the bottom of the list.
 
-# Colors
+![](../images/swt_quarto_template.png)
 
-The `swt_color` object provides an user-friendly access to the SWT
-color scheme.
+## Writing a report
 
-```{r fig.height=1.2, fig.width=8}
+The Swisstransplant Quarto template is written in markdown, a guide to markdown basics is here <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
+
+```R
+::: {.callout-note}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`.
+:::
+```
+
+::: {.callout-note}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`.
+:::
+
+::: {.callout-important}
+Something important.
+:::
+
+## Structure of analysis pipeline
+
+The new project will suggest a structure for a analysis pipeline. However, every project is different, therefore, only a rough structure is suggested.
+
+```{mermaid}
+flowchart TB
+I(Data import) --> P(Data processing)
+P --> Q(Quality control)
+Q --> D(Descriptive statistics)
+D --> A(Analysis)
+A --> C(Computing information)
+I --- IC[Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
+P --- PC[Data overview<br>Missing data and imputations<br>Recode<br>Transform<br>Inclusion/exclusion and subsets<br>Definition of outcomes]
+Q --- QC[Data checks<br>Assert logical expressions]
+D --- DC[Sample size<br>Table 1]
+A --- AC[Main analyses<br>Tables<br>Figures]
+C --- CC[Package names<br>Versions]
+
+```
+
+## Colors
+
+The `swt_color()` function creates a object for a user-friendly access to the Swisstransplant
+color scheme:
+
+```R
+col = swt::swt_colors()
+col$blue.dark
+```
+
+The following colors are available:
+
+```{r fig.height=1.2, fig.width=7}
 col = swt_colors()
 par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
-barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
-                                     col$blue.swt,
+barplot(rep(1,10), axes=FALSE, col=c(col$blue.dark,
                                      col$turkis.tpx,
                                      col$yellow.donation, 
                                      col$strongred.akzent,
@@ -59,24 +103,25 @@ barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
                                      col$beige.intestine
                                      
 ),
-names.arg = c("blue\ndark", "blue\nSWT", "turkis\nTpx", "yellow\ndonat", 
+names.arg = c("blue\ndark", "turkis\ntpx", "yellow\ndonat", 
               "strongr\nakzent", "pink\nheart", "red\nliver", "darkylw\nkidney", 
               "green\npancr", "lightb\nlungs", "beige\nintest")
 )
 ```
 
-## Single hue palettes
+## Color palettes
 
 The `swt_color` object also includes single hue palettes with three additonal color strengths, 75%, 50%, and 25%.
 
-```{r fig.height=7, fig.width=5}
+```{r fig.height=7, fig.width=2.5}
 par(mfrow=c(10,1), mai=c(0.1,0.1,0.2,0.1))
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
                                     col$pal.blue.swt[2],
                                     col$pal.blue.swt[3],
                                     col$pal.blue.swt[4]),
-        names = c("100%", "75%", "50%", "25%")
+        names.arg = c("100%", "75%", "50%", "25%"), 
+        cex.names = 1.5
 )
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.turkis.tpx[1],
@@ -129,11 +174,14 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.beige.intestine[1],
 ```
 
 # Plots
+
+Below are a few examples for creating various type of data plots in the SWT color scheme.
+
 ## Scientific plots
 
 ```{r fig.height=5, fig.width=5}
 set.seed(1980)
-n = 200
+n = 100
 var1 = c(rnorm(n/2, mean=0), rnorm(n/2, mean=3) )
 d = data.frame(var1 = var1,
                var2 = var1 + rnorm(n, sd = 0.4),
@@ -142,12 +190,14 @@ d = data.frame(var1 = var1,
 
 p1 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
   geom_boxplot(fill=col$grey.bg) + 
-  geom_point(size=2, position = position_jitter(height = 0, width = 0.25),
-             col=c(rep(col$pal.blue.swt[3], n/2),
-                   rep(col$pal.red.liver[3], n/2))) +
+  geom_point(size=2, shape=1, position = position_jitter(height = 0, width = 0.25),
+             col=c(rep(col$pal.blue.swt[1], n/2),
+                   rep(col$pal.red.liver[1], n/2))) +
+  labs(title = "Title", tag = "A") +
   scale_color_manual(values = c(col$blue.swt,
                                 col$red.liver)) +
-  swt_style(legend_position = "none", grey_theme = TRUE)
+  swt_style(legend_position = "none", grey_theme = TRUE, font_size = 14, title_size = 16) + 
+  theme(plot.tag = element_text(size = 16, face = "bold"))
 
 p2 = ggplot(d, aes(x=group, y=var1, group=group, col=group)) + 
   geom_boxplot() + 
@@ -168,10 +218,10 @@ p4 = ggplot(d, aes(x=var2, y=var1, group=group, col=group)) +
   geom_point(size=2, alpha=0.5) +
   scale_color_manual(values = c(col$blue.swt,
                                 col$yellow.donation)) +
-  labs(title = "Title") +
-  swt_style(legend_position = "top", grey_theme = TRUE)
+  labs(title = "Title", tag = "D") +
+  swt_style(legend_position = "bottom", grey_theme = TRUE)
 
-plot_grid(p1, p2, p3, p4, nrow = 2, ncol = 2, labels = c("A", "B", "C", "D"))
+grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 ```
 
 
@@ -186,11 +236,7 @@ table3.2 = t(array(c(
 
 colnames(table3.2) = 2016:2020
 rownames(table3.2) = c("Total", "DBD", "DCD")
-```
 
-First, we have to create a `data.frame` for the plot.
-
-```{r}
 data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```
 
@@ -231,12 +277,7 @@ colnames(table3.1) = 2016:2020
 colnames(table3.1.totals) = 2016:2020
 rownames(table3.1) = c("DBD", "DCD")
 rownames(table3.1.totals) = c("Total")
-```
 
-We first create a data.frame for the plot. Because the totals are in a separate line plot, we
-create a separate `data frame` accordingly.
-
-```{r}
 data3.1 = melt(table3.1, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"),
                       value.name = "Anzahl")
@@ -267,10 +308,9 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   swt_style(grey_theme = TRUE) 
 ```
 
-# Computing environment
+# Computing information
 
 ```{r}
 sessionInfo()
 ```
-
 
