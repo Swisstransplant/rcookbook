@@ -5,7 +5,7 @@ This repo is home to the Swisstransplant R cookbook. It includes instructions on
 The cookbook is available at this link:
 <https://swisstransplant.github.io/rcookbook>
 
-To publish the cookbook type:
+To publish the cookbook, type in the Windows CMD (Git Bash may cause an error):
 
 ```
 quarto publish gh-pages
