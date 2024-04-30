@@ -3,7 +3,7 @@ title: 'Swisstransplant cookbook for R'
 subtitle: 'Statistical report'
 author: Simon Schwab
 date: last-modified
-abstract: 'The aim of this document is to demonstrate statistical reporting in our in-house style..'
+abstract: 'This document aims to demonstrate statistical reporting in our in-house style.'
 lang: en
 format:
   html:
@@ -14,31 +14,35 @@ format:
     embed-resources: true
     code-fold: true
     code-block-bg: '#E6EEF0'
-    code-block-border-left: '#E5005C'
+    code-block-border-left: '#3F698A'
 ---
 
 # Introduction
-This cookbook demonstrates the usage of the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style. It also provides links to important resources and documentation.
+
+This cookbook demonstrates how to use the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style. It also provides links to important resources and documentation.
+
+More details can be found in the [swt package documentation](https://github.com/Swisstransplant/swt/blob/08f8a20aca6c00c7e47d7010613190fe3be99490/manual/swt.pdf).
 
 ```{r, message=FALSE}
 library(ggplot2)
 library(gridExtra)
 library(reshape2)
 library(swt)
+library(readxl)
 ```
 
-# Statistical reporting
+# Quarto report
 
-The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, and results, tables and figures into a single reproducible document. All the steps how the results were obtained from the data are exactly specified. This enables transparency, reproducibility and trust in statistical analyses.
+The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables and figures into a reproducible documents. All the steps for obtaining the results from the data are precisely specified. This enables transparency, reproducibility, and trust in statistical analyses.
 
 A new project in RStudio can be created using the Swisstransplant project template:
-Click **New Project...** then choose **New Directory** and select the **Swisstransplant Project Template** at the bottom of the list.
+Click **New Project...** then choose **New Directory**, and select the **Swisstransplant Project Template** at the bottom of the list.
 
 ![](../images/swt_quarto_template.png)
 
 ## Writing a report
 
-The Swisstransplant Quarto template is written in markdown, a guide to markdown basics is here <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
+The Swisstransplant Quarto template is written in markdown; a guide to markdown basics is here <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
 
 ```R
 ::: {.callout-note}
@@ -48,7 +52,7 @@ Note that there are five types of callouts, including:
 ```
 
 ::: {.callout-note}
-Note that there are five types of callouts, including:
+Note that there are five types of callouts:
 `note`, `warning`, `important`, `tip`, and `caution`.
 :::
 
@@ -56,29 +60,34 @@ Note that there are five types of callouts, including:
 Something important.
 :::
 
-## Structure of analysis pipeline
+# Data analysis workflow
 
-The new project will suggest a structure for a analysis pipeline. However, every project is different, therefore, only a rough structure is suggested.
+The new project will suggest a structure for an analysis pipeline. However, every project is different; therefore, only a rough structure is suggested.
 
 ```{mermaid}
 flowchart TB
-I(Data import) --> P(Data processing)
+O(Objectives) --> I(Data import)
+I --> P(Data processing)
 P --> Q(Quality control)
 Q --> D(Descriptive statistics)
-D --> A(Analysis)
-A --> C(Computing information)
-I --- IC[Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
-P --- PC[Data overview<br>Missing data and imputations<br>Recode<br>Transform<br>Inclusion/exclusion and subsets<br>Definition of outcomes]
-Q --- QC[Data checks<br>Assert logical expressions]
-D --- DC[Sample size<br>Table 1]
-A --- AC[Main analyses<br>Tables<br>Figures]
-C --- CC[Package names<br>Versions]
+D --> A(Primary analysis)
+A --> S(Secondary analyses)
+S --> C(Computing information)
+O --- OC[Study objectives<br>Primary outcome<br>Secondary outcomes<br>Methods]
+I --- IC[Custom R functions<br>Load libraries<br>Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
+P --- PC[Data overview<br>Definition of outcomes<br>Consent status<br>Inclusion, exclusion and subsets<br>Missing data and imputations<br>Transform<br>Matching<br>Create analysis data set]
+Q --- QC[Data checks<br>Assert logical expressions<br>Variable distributions]
+D --- DC[Sample size<br>Table 1<br>Consort Diagram]
+A --- AC[Results<br>Tables<br>Figures]
+S --- SC[Results<br>Tables<br>Figures]
+C --- CC[Runtime<br>Environment<br>Package names and versions]
 
 ```
+# Corporate design
 
 ## Colors
 
-The `swt_color()` function creates a object for a user-friendly access to the Swisstransplant
+The `swt_colors()` function creates an object for user-friendly access to the Swisstransplant
 color scheme:
 
 ```R
@@ -111,7 +120,7 @@ names.arg = c("blue\ndark", "turkis\ntpx", "yellow\ndonat",
 
 ## Color palettes
 
-The `swt_color` object also includes single hue palettes with three additonal color strengths, 75%, 50%, and 25%.
+The `swt_color` object also includes single hue palettes with three additional color strengths, 75%, 50%, and 25%.
 
 ```{r fig.height=7, fig.width=2.5}
 par(mfrow=c(10,1), mai=c(0.1,0.1,0.2,0.1))
@@ -173,9 +182,9 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.beige.intestine[1],
 )
 ```
 
-# Plots
+# Plots with `ggplot2`
 
-Below are a few examples for creating various type of data plots in the SWT color scheme.
+Below are a few examples for creating various types of data plots in the SWT color scheme. The function `swt_style()` adds the correct styling to the plot.
 
 ## Scientific plots
 
@@ -307,6 +316,79 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   ylab("Personen") +
   swt_style(grey_theme = TRUE) 
 ```
+
+# Tiny little helpers
+
+Several helper functions are implemented to support statistical computing.
+
+## Formatting
+
+* `mean_sd` for the mean and standard deviation
+* `median_irq` for the median and interquartile range
+* `freq_perc` for the frequency count and percent
+* `miss_perc` for the frequency count and percent for missing data (`NA`)
+* `tidy_pvalues` for formatting p-values
+
+The helper functions above are applied to single variables (vectors).
+
+* `tidy_missing` displays missing data of all the variables in a data frame.
+
+```{r}
+set.seed(1980)
+data = data.frame(age = rnorm(n = 200, mean = 50, sd = 10))
+data$hypertension = rbinom(n = 200, size = 1, prob = 0.20)
+
+tab = data.frame(age = mean_sd(data$age),
+                 hypertension = freq_perc(data$hypertension)
+                 )
+tab = t(tab)
+colnames(tab) = "Descriptives"
+tab = as.data.frame(tab)
+rownames(tab) = c("age, mean (SD)", "hypertension, count (%)")
+tab
+```
+
+```{r}
+data$age[1:5] = NA
+tidy_missing(data)
+```
+## Dates 
+
+Dates are sometimes entered inconsistently. If we force the data type to be a date using the option `col_types`, these values are discarded and show up as `NA`.
+
+We also get a warning; see below.
+
+```{r}
+data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "date"))
+data
+```
+
+An alternative is to import them as data type text. The dates show up as numbers and, if not recognized, as characters. The numbers are the number of days since 1899-12-30; this is an Excel convention.
+
+```{r}
+data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "text"))
+data
+```
+
+We can use the function `num2date()` to convert numbers into dates. There is also a built-in filter that recognizes the alternative format, which can also be modified via the option, she `?num2date`.
+
+```{r}
+data$mydate = num2date(data$mydate)
+data
+```
+
+One disadvantage of handling dates as numbers is when performing data cleaning. For example, manually correcting dates or adding missing data may be necessary. This has to be done in numbers before the conversion into the `POSIXct` data type. However, the function `date2num()`can be used for this purpose.
+
+```{r}
+data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "text"))
+data$mydate[1] = date2num("2024-04-30")
+data$mydate = num2date(data$mydate)
+data
+```
+
+::: {.callout-note}
+Using `num2date()` for all date variables will also handle the time zone consistently using `CET` time (and `CEST` during summer). Note that having mixed time zones `UTC`, and `CET` can cause offsets of 1 hour.
+:::
 
 # Computing information
 
