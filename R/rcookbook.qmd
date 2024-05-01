@@ -381,7 +381,7 @@ One disadvantage of handling dates as numbers is when performing data cleaning. 
 
 ```{r}
 data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "text"))
-data$mydate[1] = date2num("2024-04-30")
+data$mydate[3] = date2num("1980-03-11 02:10:00")
 data$mydate = num2date(data$mydate)
 data
 ```

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Simon Schwab">
-<meta name="dcterms.date" content="2024-04-30">
+<meta name="dcterms.date" content="2024-05-01">
 
 <title>Swisstransplant cookbook for R</title>
 <style>
@@ -5038,7 +5038,7 @@ z-index: 1000;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 30, 2024</p>
+      <p class="date">May 1, 2024</p>
     </div>
   </div>
   
@@ -5535,10 +5535,10 @@ C --- CC[Runtime&lt;br&gt;Environment&lt;br&gt;Package names and versions]
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">2021-08-22</td>
+<td style="text-align: left;">2021-08-22 16:43:01</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2023-02-17</td>
+<td style="text-align: left;">2023-02-17 22:12:02</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">NA</td>
@@ -5565,10 +5565,10 @@ C --- CC[Runtime&lt;br&gt;Environment&lt;br&gt;Package names and versions]
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">44430</td>
+<td style="text-align: left;">44430.696539351855</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">44974</td>
+<td style="text-align: left;">44974.925023148149</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">11.03.1980</td>
@@ -5595,13 +5595,13 @@ C --- CC[Runtime&lt;br&gt;Environment&lt;br&gt;Package names and versions]
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">2021-08-22</td>
+<td style="text-align: left;">2021-08-22 16:43:01</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2023-02-17</td>
+<td style="text-align: left;">2023-02-17 22:12:02</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">1980-03-11</td>
+<td style="text-align: left;">1980-03-11 00:00:00</td>
 </tr>
 </tbody>
 </table>
@@ -5613,7 +5613,7 @@ C --- CC[Runtime&lt;br&gt;Environment&lt;br&gt;Package names and versions]
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">read_xlsx</span>(<span class="at">path =</span> <span class="st">&quot;../data/dates.xlsx&quot;</span>, <span class="at">col_types =</span> <span class="st">&quot;text&quot;</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>mydate[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">date2num</span>(<span class="st">&quot;2024-04-30&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>mydate[<span class="dv">3</span>] <span class="ot">=</span> <span class="fu">date2num</span>(<span class="st">&quot;1980-03-11 02:10:00&quot;</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>mydate <span class="ot">=</span> <span class="fu">num2date</span>(data<span class="sc">$</span>mydate)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -5627,13 +5627,13 @@ C --- CC[Runtime&lt;br&gt;Environment&lt;br&gt;Package names and versions]
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">2024-04-30</td>
+<td style="text-align: left;">2021-08-22 16:43:01</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2023-02-17</td>
+<td style="text-align: left;">2023-02-17 22:12:02</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">1980-03-11</td>
+<td style="text-align: left;">1980-03-11 02:10:00</td>
 </tr>
 </tbody>
 </table>
@@ -5663,8 +5663,8 @@ Note
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.3 (2024-02-29 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+<pre><code>R version 4.4.0 (2024-04-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
 Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
@@ -5685,18 +5685,18 @@ other attached packages:
 [1] readxl_1.4.3   swt_0.1        reshape2_1.4.4 gridExtra_2.3  ggplot2_3.5.1 
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.5      jsonlite_1.8.8    dplyr_1.1.4       compiler_4.3.3   
- [5] tidyselect_1.2.1  Rcpp_1.0.12       stringr_1.5.1     splines_4.3.3    
+ [1] gtable_0.3.5      jsonlite_1.8.8    dplyr_1.1.4       compiler_4.4.0   
+ [5] tidyselect_1.2.1  Rcpp_1.0.12       stringr_1.5.1     splines_4.4.0    
  [9] scales_1.3.0      yaml_2.3.8        fastmap_1.1.1     lattice_0.22-6   
 [13] R6_2.5.1          plyr_1.8.9        labeling_0.4.3    generics_0.1.3   
-[17] knitr_1.46        MASS_7.3-60.0.1   htmlwidgets_1.6.4 tibble_3.2.1     
+[17] knitr_1.46        MASS_7.3-60.2     htmlwidgets_1.6.4 tibble_3.2.1     
 [21] munsell_0.5.1     lubridate_1.9.3   pillar_1.9.0      rlang_1.1.3      
 [25] utf8_1.2.4        stringi_1.8.3     xfun_0.43         segmented_2.0-4  
 [29] timechange_0.3.0  cli_3.6.2         withr_3.0.0       magrittr_2.0.3   
-[33] digest_0.6.35     grid_4.3.3        rstudioapi_0.16.0 nlme_3.1-164     
+[33] digest_0.6.35     grid_4.4.0        rstudioapi_0.16.0 nlme_3.1-164     
 [37] lifecycle_1.0.4   vctrs_0.6.5       evaluate_0.23     glue_1.7.0       
 [41] farver_2.1.1      cellranger_1.1.0  fansi_1.0.6       colorspace_2.1-0 
-[45] rmarkdown_2.26    tools_4.3.3       pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
+[45] rmarkdown_2.26    tools_4.4.0       pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
 </div>
 </div>
 </section>
