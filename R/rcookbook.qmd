@@ -66,22 +66,21 @@ The new project will suggest a structure for an analysis pipeline. However, ever
 
 ```{mermaid}
 flowchart TB
-O(Objectives) --> I(Data import)
-I --> P(Data processing)
-P --> Q(Quality control)
-Q --> D(Descriptive statistics)
-D --> A(Primary analysis)
-A --> S(Secondary analyses)
-S --> C(Computing information)
-O --- OC[Study objectives<br>Primary outcome<br>Secondary outcomes<br>Methods]
-I --- IC[Custom R functions<br>Load libraries<br>Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
-P --- PC[Data overview<br>Definition of outcomes<br>Consent status<br>Inclusion, exclusion and subsets<br>Missing data and imputations<br>Transform<br>Matching<br>Create analysis data set]
-Q --- QC[Data checks<br>Assert logical expressions<br>Variable distributions]
-D --- DC[Sample size<br>Table 1<br>Consort Diagram]
-A --- AC[Results<br>Tables<br>Figures]
-S --- SC[Results<br>Tables<br>Figures]
-C --- CC[Runtime<br>Environment<br>Package names and versions]
-
+  O(Objectives) --> I(Data import)
+  I --> P(Data processing)
+  P --> Q(Quality control)
+  Q --> D(Descriptive statistics)
+  D --> A(Primary analysis)
+  A --> S(Secondary analyses)
+  S --> C(Computing information)
+  O --- OC[Study objectives<br>Primary outcome<br>Secondary outcomes<br>Methods]
+  I --- IC[Custom R functions<br>Load libraries<br>Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
+  P --- PC[Data overview<br>Definition of outcomes<br>Consent status<br>Inclusion, exclusion and subsets<br>Missing data and imputations<br>Transform<br>Matching<br>Create analysis data set]
+  Q --- QC[Data checks<br>Assert logical expressions<br>Variable distributions]
+  D --- DC[Sample size<br>Table 1<br>Consort Diagram]
+  A --- AC[Results<br>Tables<br>Figures]
+  S --- SC[Results<br>Tables<br>Figures]
+  C --- CC[Runtime<br>Environment<br>Package names and versions]
 ```
 # Corporate design
 
@@ -373,7 +372,7 @@ data
 We can use the function `num2date()` to convert numbers into dates. There is also a built-in filter that recognizes the alternative format, which can also be modified via the option; see `?num2date`.
 
 ```{r}
-data$mydate = num2date(data$mydate)
+data$mydate = num2date(data$mydate, format = "%d.%m.%Y %H:%M:%OS", round = FALSE)
 data
 ```
 
