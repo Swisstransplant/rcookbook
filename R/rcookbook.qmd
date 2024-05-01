@@ -370,7 +370,7 @@ data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "text"))
 data
 ```
 
-We can use the function `num2date()` to convert numbers into dates. There is also a built-in filter that recognizes the alternative format, which can also be modified via the option, she `?num2date`.
+We can use the function `num2date()` to convert numbers into dates. There is also a built-in filter that recognizes the alternative format, which can also be modified via the option; see `?num2date`.
 
 ```{r}
 data$mydate = num2date(data$mydate)
