@@ -96,10 +96,11 @@ col$blue.dark
 
 The following colors are available:
 
-```{r fig.height=1.2, fig.width=7}
+```{r fig.height=1.2, fig.width=7.5}
 col = swt_colors()
 par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
-barplot(rep(1,10), axes=FALSE, col=c(col$blue.dark,
+barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
+                                     col$blue.alt,
                                      col$turkis.tpx,
                                      col$yellow.donation, 
                                      col$strongred.akzent,
@@ -111,7 +112,7 @@ barplot(rep(1,10), axes=FALSE, col=c(col$blue.dark,
                                      col$beige.intestine
                                      
 ),
-names.arg = c("blue\ndark", "turkis\ntpx", "yellow\ndonat", 
+names.arg = c("blue\ndark", "blue\nalt", "turkis\ntpx", "yellow\ndonat", 
               "strongr\nakzent", "pink\nheart", "red\nliver", "darkylw\nkidney", 
               "green\npancr", "lightb\nlungs", "beige\nintest")
 )
@@ -121,8 +122,8 @@ names.arg = c("blue\ndark", "turkis\ntpx", "yellow\ndonat",
 
 The `swt_color` object also includes single hue palettes with three additional color strengths, 75%, 50%, and 25%.
 
-```{r fig.height=7, fig.width=2.5}
-par(mfrow=c(10,1), mai=c(0.1,0.1,0.2,0.1))
+```{r fig.height=7.5, fig.width=2.5}
+par(mfrow=c(11,1), mai=c(0.1,0.1,0.2,0.1))
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
                                     col$pal.blue.swt[2],
@@ -130,6 +131,12 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
                                     col$pal.blue.swt[4]),
         names.arg = c("100%", "75%", "50%", "25%"), 
         cex.names = 1.5
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.alt[1],
+                                    col$pal.blue.alt[2],
+                                    col$pal.blue.alt[3],
+                                    col$pal.blue.alt[4])
 )
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.turkis.tpx[1],
@@ -148,6 +155,12 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.strongred.akzent[1],
                                     col$pal.strongred.akzent[2],
                                     col$pal.strongred.akzent[3],
                                     col$pal.strongred.akzent[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.pink.heart[1],
+                                    col$pal.pink.heart[2],
+                                    col$pal.pink.heart[3],
+                                    col$pal.pink.heart[4])
 )
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.red.liver[1],
