@@ -24,6 +24,8 @@ This cookbook demonstrates how to use the Swisstransplant R package `swt` to mak
 More details can be found in the [swt package documentation](https://github.com/Swisstransplant/swt/blob/08f8a20aca6c00c7e47d7010613190fe3be99490/manual/swt.pdf).
 
 ```{r, message=FALSE}
+# TODO: add devel/tidy_rmsfit stuff to rcookbook
+
 library(ggplot2)
 library(gridExtra)
 library(reshape2)
@@ -33,7 +35,7 @@ library(readxl)
 
 # Quarto report
 
-The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables and figures into a reproducible documents. All the steps for obtaining the results from the data are precisely specified. This enables transparency, reproducibility, and trust in statistical analyses.
+The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables, and figures into a reproducible document. All the steps for obtaining the results from the data are precisely specified. This enables transparency, reproducibility, and trust in statistical analyses.
 
 A new project in RStudio can be created using the Swisstransplant project template:
 Click **New Project...** then choose **New Directory**, and select the **Swisstransplant Project Template** at the bottom of the list.
@@ -42,7 +44,7 @@ Click **New Project...** then choose **New Directory**, and select the **Swisstr
 
 ## Writing a report
 
-The Swisstransplant Quarto template is written in markdown; a guide to markdown basics is here <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
+The Swisstransplant Quarto template is written in markdown; for a guide to markdown basics, see <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
 
 ```R
 ::: {.callout-note}
@@ -66,21 +68,21 @@ The new project will suggest a structure for an analysis pipeline. However, ever
 
 ```{mermaid}
 flowchart TB
-  O(Objectives) --> I(Data import)
-  I --> P(Data processing)
-  P --> Q(Quality control)
-  Q --> D(Descriptive statistics)
-  D --> A(Primary analysis)
-  A --> S(Secondary analyses)
-  S --> C(Computing information)
-  O --- OC[Study objectives<br>Primary outcome<br>Secondary outcomes<br>Methods]
-  I --- IC[Custom R functions<br>Load libraries<br>Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
-  P --- PC[Data overview<br>Definition of outcomes<br>Consent status<br>Inclusion, exclusion and subsets<br>Missing data and imputations<br>Transform<br>Matching<br>Create analysis data set]
-  Q --- QC[Data checks<br>Assert logical expressions<br>Variable distributions]
-  D --- DC[Sample size<br>Table 1<br>Consort Diagram]
-  A --- AC[Results<br>Tables<br>Figures]
-  S --- SC[Results<br>Tables<br>Figures]
-  C --- CC[Runtime<br>Environment<br>Package names and versions]
+O(Objectives) --> I(Data import)
+I --> P(Data processing)
+P --> Q(Quality control)
+Q --> D(Descriptive statistics)
+D --> A(Primary analysis)
+A --> S(Secondary analyses)
+S --> C(Computing information)
+O --- OC[Study objectives<br>Primary outcome<br>Secondary outcomes<br>Methods]
+I --- IC[Custom R functions<br>Load libraries<br>Two-pass reading when necessary<br>Data class conversion<br>Data cleaning<br>Reshape<br>Merge<br>Aggregate]
+P --- PC[Data overview<br>Definition of outcomes<br>Consent status<br>Inclusion, exclusion and subsets<br>Missing data and imputations<br>Transform<br>Matching<br>Create analysis data set]
+Q --- QC[Data checks<br>Assert logical expressions<br>Variable distributions]
+D --- DC[Sample size<br>Table 1<br>Consort Diagram]
+A --- AC[Results<br>Tables<br>Figures]
+S --- SC[Results<br>Tables<br>Figures]
+C --- CC[Runtime<br>Environment<br>Package names and versions]
 ```
 # Corporate design
 
@@ -99,7 +101,7 @@ The following colors are available:
 ```{r fig.height=1.2, fig.width=7.5}
 col = swt_colors()
 par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
-barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
+barplot(rep(1,12), axes=FALSE, col=c(col$blue.dark,
                                      col$blue.alt,
                                      col$turkis.tpx,
                                      col$yellow.donation, 
@@ -109,28 +111,29 @@ barplot(rep(1,11), axes=FALSE, col=c(col$blue.dark,
                                      col$darkyellow.kidney,
                                      col$green.pancreas,
                                      col$lightblue.lungs,
-                                     col$beige.intestine
+                                     col$beige.intestine,
+                                     col$purple.alt
                                      
 ),
 names.arg = c("blue\ndark", "blue\nalt", "turkis\ntpx", "yellow\ndonat", 
               "strongr\nakzent", "pink\nheart", "red\nliver", "darkylw\nkidney", 
-              "green\npancr", "lightb\nlungs", "beige\nintest")
+              "green\npancr", "lightb\nlungs", "beige\nintest", "purple\nalt"),
+cex.names = 0.8
+
 )
 ```
 
 ## Color palettes
 
-The `swt_color` object also includes single hue palettes with three additional color strengths, 75%, 50%, and 25%.
+The `swt_color` object also includes single hue palettes with three additional color strength:, 75%, 50%, and 25%.
 
-```{r fig.height=7.5, fig.width=2.5}
-par(mfrow=c(11,1), mai=c(0.1,0.1,0.2,0.1))
+```{r fig.height=8, fig.width=2.5}
+par(mfrow=c(12,1), mai=c(0.1,0.1,0.2,0.1))
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
                                     col$pal.blue.swt[2],
                                     col$pal.blue.swt[3],
-                                    col$pal.blue.swt[4]),
-        names.arg = c("100%", "75%", "50%", "25%"), 
-        cex.names = 1.5
+                                    col$pal.blue.swt[4])
 )
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.alt[1],
@@ -191,6 +194,14 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.beige.intestine[1],
                                     col$pal.beige.intestine[2],
                                     col$pal.beige.intestine[3],
                                     col$pal.beige.intestine[4])
+)
+
+barplot(rep(1,4), axes=FALSE, col=c(col$pal.purple.alt[1],
+                                    col$pal.purple.alt[2],
+                                    col$pal.purple.alt[3],
+                                    col$pal.purple.alt[4]),
+        names.arg = c("100%", "75%", "50%", "25%"), 
+        cex.names = 0.8
 )
 ```
 
@@ -352,7 +363,7 @@ data$hypertension = rbinom(n = 200, size = 1, prob = 0.20)
 
 tab = data.frame(age = mean_sd(data$age),
                  hypertension = freq_perc(data$hypertension)
-                 )
+)
 tab = t(tab)
 colnames(tab) = "Descriptives"
 tab = as.data.frame(tab)
