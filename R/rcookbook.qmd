@@ -8,22 +8,21 @@ lang: en
 format:
   html:
     toc: true
-    css: swt.css
-    linkcolor: '#E5005C'
+    theme: swt.scss
     df-print: kable
     embed-resources: true
     code-fold: true
-    code-block-bg: '#E6EEF0'
-    code-block-border-left: '#3F698A'
 ---
 
-# Introduction
+## Introduction
 
-This cookbook demonstrates how to use the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style. It also provides links to important resources and documentation.
+This cookbook introduces the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style---much more.
 
-More details can be found in the [swt package documentation](https://github.com/Swisstransplant/swt/blob/08f8a20aca6c00c7e47d7010613190fe3be99490/manual/swt.pdf).
+The source code for `swt` is maintained on GitHub and can be accessed [here](https://github.com/Swisstransplant/swt). Additionally, a [package manual](https://github.com/Swisstransplant/swt/blob/08f8a20aca6c00c7e47d7010613190fe3be99490/manual/swt.pdf) is available for reference.
 
-```{r, message=FALSE}
+```{r}
+#| message: false
+
 # TODO: add devel/tidy_rmsfit stuff to rcookbook
 
 library(ggplot2)
@@ -33,36 +32,36 @@ library(swt)
 library(readxl)
 ```
 
-# Quarto report
+## Quarto report
 
 The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables, and figures into a reproducible document. All the steps for obtaining the results from the data are precisely specified. This enables transparency, reproducibility, and trust in statistical analyses.
 
 A new project in RStudio can be created using the Swisstransplant project template:
-Click **New Project...** then choose **New Directory**, and select the **Swisstransplant Project Template** at the bottom of the list.
+Click **New Project...** then choose **New Directory**, and select the **Swisstransplant Project** at the bottom of the list.
 
 ![](../images/swt_quarto_template.png)
 
-## Writing a report
+### Writing a report
 
-The Swisstransplant Quarto template is written in markdown; for a guide to markdown basics, see <https://quarto.org/docs/authoring/markdown-basics.html>. It is possible to add **callout blocks** <https://quarto.org/docs/authoring/callouts.html> to highlight important information.
+The Swisstransplant Quarto template is written in [markdown](https://quarto.org/docs/authoring/markdown-basics.html). It is possible to add [callout blocks](https://quarto.org/docs/authoring/callouts.html) to highlight important information.
 
 ```R
-::: {.callout-note}
+::: {.callout-note appearance="simple"}
 Note that there are five types of callouts, including:
 `note`, `warning`, `important`, `tip`, and `caution`.
 :::
 ```
 
-::: {.callout-note}
+::: {.callout-note appearance="simple"}
 Note that there are five types of callouts:
 `note`, `warning`, `important`, `tip`, and `caution`.
 :::
 
-::: {.callout-important}
+::: {.callout-important appearance="simple"}
 Something important.
 :::
 
-# Data analysis workflow
+## Data analysis workflow
 
 The new project will suggest a structure for an analysis pipeline. However, every project is different; therefore, only a rough structure is suggested.
 
@@ -84,9 +83,9 @@ A --- AC[Results<br>Tables<br>Figures]
 S --- SC[Results<br>Tables<br>Figures]
 C --- CC[Runtime<br>Environment<br>Package names and versions]
 ```
-# Corporate design
+## Corporate design
 
-## Colors
+### Colors
 
 The `swt_colors()` function creates an object for user-friendly access to the Swisstransplant
 color scheme:
@@ -98,7 +97,10 @@ col$blue.dark
 
 The following colors are available:
 
-```{r fig.height=1.2, fig.width=7.5}
+```{r}
+#| fig-height: 1.2
+#| fig-width: 7.5
+
 col = swt_colors()
 par(mfrow=c(1,1), mai=c(0.5,0.1,0.2,0.1))
 barplot(rep(1,12), axes=FALSE, col=c(col$blue.dark,
@@ -123,11 +125,14 @@ cex.names = 0.8
 )
 ```
 
-## Color palettes
+### Color palettes
 
-The `swt_color` object also includes single hue palettes with three additional color strength:, 75%, 50%, and 25%.
+The `swt_color` object also includes single hue palettes with three additional color strengths: 75%, 50%, and 25%.
 
-```{r fig.height=8, fig.width=2.5}
+```{r}
+#| fig-height: 8
+#| fig-width: 2.5
+
 par(mfrow=c(12,1), mai=c(0.1,0.1,0.2,0.1))
 
 barplot(rep(1,4), axes=FALSE, col=c(col$pal.blue.swt[1],
@@ -205,13 +210,16 @@ barplot(rep(1,4), axes=FALSE, col=c(col$pal.purple.alt[1],
 )
 ```
 
-# Plots with `ggplot2`
+## Plots with `ggplot2`
 
-Below are a few examples for creating various types of data plots in the SWT color scheme. The function `swt_style()` adds the correct styling to the plot.
+Below are a few examples of creating various types of data plots in the SWT color scheme. The function `swt_style()` adds the correct styling to the plot.
 
-## Scientific plots
+### Scientific plots
 
-```{r fig.height=5, fig.width=5}
+```{r}
+#| fig-height: 5
+#| fig-width: 5
+
 set.seed(1980)
 n = 100
 var1 = c(rnorm(n/2, mean=0), rnorm(n/2, mean=3) )
@@ -256,8 +264,7 @@ p4 = ggplot(d, aes(x=var2, y=var1, group=group, col=group)) +
 grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 ```
 
-
-## Line plot
+### Line plot
 
 ```{r}
 # Data taken from Annual Report 2020 (p. 32)
@@ -272,7 +279,10 @@ rownames(table3.2) = c("Total", "DBD", "DCD")
 data3.2 = melt(table3.2, varnames = c("Gruppe", "Jahr"), value.name = "Anzahl")
 ```
 
-```{r fig.height=4, fig.width=5}
+```{r}
+#| fig-height: 4
+#| fig-width: 5
+
 number_height = -0.8
 
 ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
@@ -296,7 +306,7 @@ ggplot(data3.2, aes(x=Jahr, y=Anzahl, col=Gruppe, group=Gruppe)) +
   theme(legend.position = "top")
 ``` 
 
-## Barplot with lines
+### Barplot with lines
 
 ```{r}
 # Data taken from Annual Report 2020 (p. 31)
@@ -315,7 +325,10 @@ data3.1.totals = melt(table3.1.totals, varnames = c("Gruppe", "Jahr"),
                       value.name = "Anzahl")
 ```
 
-```{r fig.height=4, fig.width=5}
+```{r}
+#| fig-height: 4
+#| fig-width: 5
+
 number_height = -0.8
 bar_with = 0.5
 
@@ -340,11 +353,11 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
   swt_style(grey_theme = TRUE) 
 ```
 
-# Tiny little helpers
+## Tiny little helpers
 
 Several helper functions are implemented to support statistical computing.
 
-## Formatting
+### Formatting
 
 * `mean_sd` for the mean and standard deviation
 * `median_irq` for the median and interquartile range
@@ -375,7 +388,8 @@ tab
 data$age[1:5] = NA
 tidy_missing(data)
 ```
-## Dates 
+
+### Dates 
 
 Dates are sometimes entered inconsistently. If we force the data type to be a date using the option `col_types`, these values are discarded and show up as `NA`.
 
@@ -409,11 +423,11 @@ data$mydate = num2date(data$mydate)
 data
 ```
 
-::: {.callout-note}
-Using `num2date()` for all date variables will also handle the time zone consistently using `CET` time (and `CEST` during summer). Note that having mixed time zones `UTC`, and `CET` can cause offsets of 1 hour.
+::: {.callout-note appearance="simple"}
+Using `num2date()` for all date variables will also handle the time zone consistently using `CET` time (and `CEST` during summer). Note that having mixed time zones, `UTC` and `CET`, can cause offsets of 1 hour.
 :::
 
-# Computing information
+## Computing information
 
 ```{r}
 sessionInfo()
