@@ -1,9 +1,9 @@
 ---
-title: 'Swisstransplant cookbook for R'
-subtitle: 'Statistical report'
+title: 'Swisstransplant R cookbook'
+subtitle: 'Reproducible, high-quality statistical reporting.'
 author: Simon Schwab
 date: last-modified
-abstract: 'This document aims to demonstrate statistical reporting in our in-house style.'
+abstract: 'The Swisstransplant R cookbook is a practical guide for generating reproducible, high-quality statistical reports using our custom R package `swt`.'
 lang: en
 format:
   html:
@@ -16,34 +16,33 @@ format:
 
 ## Introduction
 
-This cookbook introduces the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style---much more.
+This cookbook introduces the Swisstransplant R package `swt` to make high-quality reports and publication-ready graphics in our in-house style.
 
-The source code for `swt` is maintained on GitHub and can be accessed [here](https://github.com/Swisstransplant/swt). Additionally, a [package manual](https://github.com/Swisstransplant/swt/blob/08f8a20aca6c00c7e47d7010613190fe3be99490/manual/swt.pdf) is available for reference.
+The source code for `swt` is maintained on GitHub and can be accessed [here](https://github.com/Swisstransplant/swt). Additionally, a [package manual](https://raw.githubusercontent.com/Swisstransplant/swt/main/manual/swt.pdf) is available for reference.
 
 ```{r}
 #| message: false
-
-# TODO: add devel/tidy_rmsfit stuff to rcookbook
 
 library(ggplot2)
 library(gridExtra)
 library(reshape2)
 library(swt)
 library(readxl)
+library(testit)
+library(rms)
 ```
 
-## Quarto report
+## Quarto document
 
-The `swt` package contains the Swisstransplant statistical report as a Quarto project template. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables, and figures into a reproducible document. All the steps for obtaining the results from the data are precisely specified. This enables transparency, reproducibility, and trust in statistical analyses.
+The `swt` package includes the Swisstransplant template for creating Quarto documents. Quarto documents enable dynamic reporting and unite written text, statistical programming code, results, tables, and figures into a reproducible document.
 
-A new project in RStudio can be created using the Swisstransplant project template:
-Click **New Project...** then choose **New Directory**, and select the **Swisstransplant Project** at the bottom of the list.
+To create a new Swisstransplant project in RStudio, click **New Project...**, select **New Directory**, and then choose **Swisstransplant Document** from the bottom of the list.
 
 ![](../images/swt_quarto_template.png)
 
-### Writing a report
+### Writing in Markdown
 
-The Swisstransplant Quarto template is written in [markdown](https://quarto.org/docs/authoring/markdown-basics.html). It is possible to add [callout blocks](https://quarto.org/docs/authoring/callouts.html) to highlight important information.
+The Swisstransplant Quarto document is written in Markdown; an overview can be found in the [Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html). It is possible to add [Callout Blocks](https://quarto.org/docs/authoring/callouts.html) to highlight important information.
 
 ```R
 ::: {.callout-note appearance="simple"}
@@ -63,7 +62,22 @@ Something important.
 
 ## Data analysis workflow
 
-The new project will suggest a structure for an analysis pipeline. However, every project is different; therefore, only a rough structure is suggested.
+The Quarto document introduces a simple data analysis workflow structured into eight chapters, each using second-level headings (##). The chapters are as follows:
+
+* Objectives
+* Data import
+* Data processing
+* Quality control
+* Descriptive statistics
+* Primary analysis
+* Secondary analysis
+* Computing information
+
+Each chapter can be further expanded to support more complex analysis projects, as illustrated in the flowchart below.
+
+::: {.callout-note appearance="simple"}
+Quarto documents that follow a structured analysis workflow enhance transparency, support reproducibility, and build trust in statistical analyses.
+:::
 
 ```{mermaid}
 flowchart TB
@@ -85,13 +99,18 @@ C --- CC[Runtime<br>Environment<br>Package names and versions]
 ```
 ## Corporate design
 
+To support professional-looking output, the `swt` package provides a custom color palette and styling for creating `ggplot2` figures.
+
+::: {.callout-note appearance="simple"}
+The color scheme and `ggplot2` styling are used in the official Swisstransplant national statistics to provide a professional and consistent visual presentation.
+:::
+
 ### Colors
 
-The `swt_colors()` function creates an object for user-friendly access to the Swisstransplant
-color scheme:
+The `swt_colors()` function creates an object for user-friendly access to the Swisstransplant color scheme:
 
 ```R
-col = swt::swt_colors()
+col = swt_colors()
 col$blue.dark
 ```
 
@@ -127,7 +146,14 @@ cex.names = 0.8
 
 ### Color palettes
 
-The `swt_color` object also includes single hue palettes with three additional color strengths: 75%, 50%, and 25%.
+The `swt_colors` object also includes single hue palettes with three additional color strengths: 75%, 50%, and 25%. Color palettes can be accessed as follows:
+
+```R
+col$pal.blue.dark[1] # 100%, same as col$blue.swt
+col$pal.blue.dark[2] #  75%
+col$pal.blue.dark[3] #  50%
+col$pal.blue.dark[4] #  25%
+```
 
 ```{r}
 #| fig-height: 8
@@ -357,43 +383,49 @@ ggplot(data3.1, aes(x=Jahr, y=Anzahl, fill=Gruppe, group=Gruppe)) +
 
 Several helper functions are implemented to support statistical computing.
 
-### Formatting
+### Descriptive statistics and formatting
 
-* `mean_sd` for the mean and standard deviation
-* `median_irq` for the median and interquartile range
-* `freq_perc` for the frequency count and percent
-* `miss_perc` for the frequency count and percent for missing data (`NA`)
-* `tidy_pvalues` for formatting p-values
-
-The helper functions above are applied to single variables (vectors).
-
-* `tidy_missing` displays missing data of all the variables in a data frame.
+* `count_perc()` for the count and percent
+* `mean_sd()` for the mean and standard deviation
+* `median_irq()` for the median and interquartile range
+* `miss_perc()` for the count and percent for missing data (`NA`)
+* `tidy_pvalues()` for formatting p-values
 
 ```{r}
 set.seed(1980)
 data = data.frame(age = rnorm(n = 200, mean = 50, sd = 10))
 data$hypertension = rbinom(n = 200, size = 1, prob = 0.20)
 
-tab = data.frame(age = mean_sd(data$age),
-                 hypertension = freq_perc(data$hypertension)
+tab = data.frame(all = c(mean_sd(data$age),
+                         count_perc(data$hypertension))
 )
-tab = t(tab)
+
 colnames(tab) = "Descriptives"
-tab = as.data.frame(tab)
-rownames(tab) = c("age, mean (SD)", "hypertension, count (%)")
+rownames(tab) = c("Age in years, mean (SD)", "Hypertension, count (%)")
 tab
 ```
+
+### Missing data
+
+The function `tidy_missing()` displays missing data of all the variables in a data frame.
 
 ```{r}
 data$age[1:5] = NA
 tidy_missing(data)
 ```
 
-### Dates 
+### Handling date and time
 
-Dates are sometimes entered inconsistently. If we force the data type to be a date using the option `col_types`, these values are discarded and show up as `NA`.
+The `swt` package provides two functions for advanced handling of date and time.
 
-We also get a warning; see below.
+* `num2date()`converts Excel days since origin to POSIXct data type (date/time).
+* `date2num()` converts POSIXct data type (date/time) to Excel days since origin.
+
+::: {.callout-note appearance="simple"}
+Using `num2date()` for all date variables will also handle the time zone consistently using `CET` time (and `CEST` during summer). Note that having mixed time zones, `UTC` and `CET`, can cause offsets of 1 hour.
+:::
+
+If date and time data are provided in a consistent way, such as from SOAS, these functions are not necessary, and date and time can be handled in the usual way. However, date and time are sometimes entered inconsistently. If we force the data type to be a date using the option `col_types`, inconsistent values are discarded and show up as `NA`, which is not ideal. We also get a warning, see below.
 
 ```{r}
 data = as.data.frame(read_xlsx(path = "../data/dates.xlsx", col_types = "date"))
@@ -423,13 +455,127 @@ data$mydate = num2date(data$mydate)
 data
 ```
 
-::: {.callout-note appearance="simple"}
-Using `num2date()` for all date variables will also handle the time zone consistently using `CET` time (and `CEST` during summer). Note that having mixed time zones, `UTC` and `CET`, can cause offsets of 1 hour.
-:::
+## Clinical calculators
+
+The `swt` package implemented a number of clinical calculators, for example, from published clinical prediction models.
+
+* eGFR according to CKD-EPI 2021
+* eGFR for pediatric patients according to Schwartz
+* OPTN KDRI (2024 version)
+* UK KDRI (2019 version)
+* UK DCD Risk Score
+
+
+Quick examples are shown below.
+
+### CKD-EPI eGFR 2021
+
+```{r}
+egfr = egfr_ckd_epi(SCr = c(40, 110), 
+                    age = c(40, 50), 
+                    sex = c("M", "F"),
+                    units = "SI")
+data.frame(eGFR = egfr)
+assert(egfr == c(136, 53))
+```
+### Revised Schwartz Equation 2009
+
+```{r}
+egfr = egfr_schwartz(SCr = c(100, 110), 
+                     height = c(100, 120),
+                     units = "SI")
+data.frame(eGFR = egfr)
+assert(egfr == c(37, 40))
+```
+
+### OPTN KDRI
+
+```{r}
+kdri = optn_kdri(D_age = c(45, 15, 70),
+                 D_height = c(183, 183, 183),
+                 D_weight = c(75, 90, 100), 
+                 D_hypertension = c(TRUE, FALSE, TRUE),
+                 D_diabetes = c(TRUE, FALSE, TRUE),
+                 D_CVA = c(TRUE, FALSE, TRUE),
+                 D_SCr = c(1, 1.8, 1.8),
+                 D_DCD = c(TRUE, FALSE, TRUE))
+
+kdri = round(kdri, digits = 2)
+data.frame(KDRI = kdri)
+assert(kdri == c(1.36, 0.56, 2.10))
+```
+
+### UK KDRI
+
+```{r}
+kdri = uk_kdri(D_age = 45,
+               D_height = 180,
+               D_hypertension = TRUE,
+               D_female = TRUE,
+               D_CMV = TRUE,
+               D_eGFR = 100,
+               D_days_hosp = 5)
+
+kdri = round(kdri, digits = 2)
+data.frame(KDRI = kdri)
+assert(kdri == 0.94)
+```
+
+### UK DCD Risk Score
+
+```{r}
+score = uk_dcd_score(D_age = c(61, 60),
+                     D_BMI = c(26, 25),
+                     fWIT = c(31, 20),
+                     CIT = c(7, 6),
+                     R_age = c(61, 60),
+                     R_MELD = c(26, 25),
+                     retpx = c(TRUE, FALSE))
+
+data.frame(Score = score)
+assert(score == c(27, 0))
+```
+
+## Statistical models
+
+The `tidy_rmsfit()` function converts regression model results from the package `rms` into a tidy, publication-ready table. This works for
+
+* `ols()` linear regression model (ordinary least squares)
+* `lmr()` logistic regression model
+* `cph()` Cox proportional hazards model
+
+```{r}
+set.seed(2025)
+
+d = data.frame(x1 = runif(200),
+               x2 = runif(200),
+               x3 = as.factor(rbinom(200, 2, 0.5))
+)
+
+dd = datadist(d)
+options(datadist="dd")  
+
+d$y <- d$x1 + d$x2 + rnorm(200)
+
+fit = rms::ols(y ~ x1 + x2 + x3, data = d)
+```
+
+Regression model results are typically displayed in an untidy format by `summary()` and `anova()`, as shown below:
+
+```{r}
+summary(fit)
+anova(fit)
+```
+
+The function `tidy_rmsfit()` combines the effect estimates and the test statistics into one single publication-ready table:
+
+```{r}
+tidy_rmsfit(fit, x3 = 0)
+```
+
 
 ## Computing information
 
 ```{r}
 sessionInfo()
 ```
-
